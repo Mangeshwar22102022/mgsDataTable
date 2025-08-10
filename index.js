@@ -468,5 +468,3 @@ document.addEventListener('click', function (e) {
     sort = columnSortType === 'asc'?'desc':'asc';
     mgsDataTable({page, column, sort});
 });
-
-module.exports = { mgsDataTable };
