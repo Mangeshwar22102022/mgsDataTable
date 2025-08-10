@@ -28,14 +28,9 @@ npm install mgsdatatable
 
 <script type="module">
     import mgsDataTable from 'mgsdatatable';
-    // Your table data
-    const data = [
-        { id: 1, name: "Mangesh", age: 27 },
-        { id: 2, name: "Ashwani", age: 27 },
-    ];
 
     // Call the function to render table
-		mgsDataTable({
+	mgsDataTable({
       target:"#tableContainer",
       url:'http://localhost/mgs/users',
       data: {},
