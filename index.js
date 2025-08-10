@@ -18,7 +18,7 @@ let _mgs_mgsCommonData = {
     isSorting: true,
 }
 let _mgsCountsCheck = 0;
-const fetchData = async (data) => {
+const mgsDataTable = async (data) => {
     _mgsCommonData = {..._mgsCommonData, ...data};
     console.log(_mgsCommonData);
     if(!_mgsCommonData?.selector){
@@ -416,7 +416,7 @@ document.addEventListener('click', function (e) {
     }else{
         pageLink.style.cssText = `cursor: pointer !important;`;
     }
-    fetchData({page, prevPage, nextPage});
+    mgsDataTable({page, prevPage, nextPage});
   }else{
     pageLink.setAttribute('disabled', true);
     pageLink.style.cssText = `cursor: not-allowed !important;`;
@@ -433,7 +433,7 @@ document.addEventListener('change', function (e) {
     page = 1;
     prevPage = null;
     nextPage = null;
-    fetchData({page,limit, prevPage, nextPage});
+    mgsDataTable({page,limit, prevPage, nextPage});
   }
 });
 
@@ -452,7 +452,7 @@ document.addEventListener('keyup', function (e) {
           el.innerHTML = `${text} <i class="fa fa-arrow-up" style="font-size:10px !important"></i>`;
           el.setAttribute('data-sort', 'asc');
         });
-        fetchData({page,column, sort, search});
+        mgsDataTable({page,column, sort, search});
     }
   }
 });
@@ -466,7 +466,7 @@ document.addEventListener('click', function (e) {
   const column = target.getAttribute('data-column');
   const columnSortType = target.getAttribute('data-sort');
     sort = columnSortType === 'asc'?'desc':'asc';
-    fetchData({page, column, sort});
+    mgsDataTable({page, column, sort});
 });
 
-module.exports = { fetchData };
+module.exports = { mgsDataTable };
