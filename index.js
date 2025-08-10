@@ -20,7 +20,6 @@ let _mgsCommonData = {
 let _mgsCountsCheck = 0;
 const mgsDataTable = async (data) => {
     _mgsCommonData = {..._mgsCommonData, ...data};
-    console.log(_mgsCommonData);
     if(!_mgsCommonData?.target){
         alert('Target is requied.');
         return;
@@ -391,8 +390,6 @@ const mgsDataTable = async (data) => {
         `;
         _mgsContainer.innerHTML = ''; 
         _mgsContainer.insertAdjacentHTML('beforebegin', _mgsErrorMessage);
-        console.log(error.message);
-        
         spinner.remove();
     }
 };
