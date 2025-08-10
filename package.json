@@ -1,0 +1,23 @@
+{
+  "name": "mgsdatatable",
+  "version": "1.0.0",
+  "description": "'A lightweight and beginner-friendly JavaScript table generator with built-in pagination, sorting, searching, and row-limit controls. This library helps you quickly display tabular data with a clean, responsive design and minimal setup — no external dependencies required. Simply pass your data array and the library will handle rendering, filtering, sorting, and page navigation automatically.'",
+  "keywords": [
+    "mgsDataTable"
+  ],
+  "homepage": "https://github.com/Mangeshwar22102022/mgsDataTable#readme",
+  "bugs": {
+    "url": "https://github.com/Mangeshwar22102022/mgsDataTable/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mangeshwar22102022/mgsDataTable.git"
+  },
+  "license": "MIT",
+  "author": "Mangesh",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

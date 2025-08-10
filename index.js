@@ -468,3 +468,5 @@ document.addEventListener('click', function (e) {
     sort = columnSortType === 'asc'?'desc':'asc';
     fetchData({page, column, sort});
 });
+
+module.exports = { fetchData };
