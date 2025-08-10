@@ -1,5 +1,5 @@
-let _mgs_mgsCommonData = {
-    selector : '',
+let _mgsCommonData = {
+    target : '',
     url : '',
     methodType : 'post',
     data : {},
@@ -21,15 +21,15 @@ let _mgsCountsCheck = 0;
 const mgsDataTable = async (data) => {
     _mgsCommonData = {..._mgsCommonData, ...data};
     console.log(_mgsCommonData);
-    if(!_mgsCommonData?.selector){
-        alert('Selector is requied.');
+    if(!_mgsCommonData?.target){
+        alert('Target is requied.');
         return;
     }
     if(!_mgsCommonData?.url){
         alert('URL is requied.');
         return;
     }
-    let selector = _mgsCommonData?.selector;
+    let _mgsTarget = _mgsCommonData?.target;
     let _mgsFullUrl = _mgsCommonData?.url ?? '/';
     let { token, ...allData} = {..._mgsCommonData?.data};
     let methodType = _mgsCommonData?.methodType;
@@ -68,7 +68,7 @@ const mgsDataTable = async (data) => {
     };
 
     // Clean up previous results
-    const _mgsContainer = document.querySelector(selector);
+    const _mgsContainer = document.querySelector(_mgsTarget);
     const nextPaginate = _mgsContainer.nextElementSibling;
     if (nextPaginate && nextPaginate.classList.contains('_mgsPaginateResult')) {
         nextPaginate.remove();
