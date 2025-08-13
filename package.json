@@ -1,6 +1,6 @@
 {
   "name": "mgsdatatable",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "dist/mgsdatatable.min.js",
   "browser": "dist/mgsdatatable.min.js",
   "type": "module",
