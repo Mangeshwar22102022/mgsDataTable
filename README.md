@@ -6,7 +6,7 @@ A simple, lightweight JavaScript library to create tables with **pagination**, *
 
 ## ✨ Features
 
-- 🔍 **Search** — Filter rows instantly as you type.  
+- 🔍 **Search** — Filter rows you type then enter keyword.  
 - ↕ **Sorting** — Click column headers to sort (ascending/descending).  
 - 📄 **Pagination** — Navigate between pages easily.  
 - 📏 **Rows Limit** — Set how many rows appear per page.  

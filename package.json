@@ -1,9 +1,19 @@
 {
-  "name": "mgstable",
-  "version": "1.0.2",
+  "name": "mgsdatatable",
+  "version": "1.0.0",
+  "main": "dist/mgsdatatable.min.js",
+  "browser": "dist/mgsdatatable.min.js",
+  "type": "module",
   "description": "A lightweight and beginner-friendly JavaScript table generator with built-in pagination, sorting, searching, and row-limit controls. This library helps you quickly display tabular data with a clean, responsive design and minimal setup — no external dependencies required. Simply pass your data array and the library will handle rendering, filtering, sorting, and page navigation automatically.",
   "keywords": [
-    "mgstable"
+    "mgsdatatable",
+    "datatable",
+    "table",
+    "javascript",
+    "pagination",
+    "sorting",
+    "browser",
+    "UMD"
   ],
   "homepage": "https://github.com/Mangeshwar22102022/mgsDataTable#readme",
   "bugs": {
@@ -15,9 +25,14 @@
   },
   "license": "MIT",
   "author": "Mangesh",
-  "type": "commonjs",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "rollup": "^2.79.2",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }
