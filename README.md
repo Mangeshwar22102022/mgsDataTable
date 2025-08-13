@@ -30,14 +30,14 @@ Two way to use it.
 <!DOCTYPE html>
 <html>
 <head>
-    <title>mgsDataTable Test</title>
+    <title>mgsDataTable</title>
     <script src="https://cdn.jsdelivr.net/npm/mgsdatatable@1.0.4/dist/mgsdatatable.min.js"></script>
 </head>
 <body>
   <table id="myTable"></table>
   <script>
     mgsDataTable({
-      target:"#tableContainer",
+      target:"#myTable",
       url:'http://localhost/mgs/users',
       data: {},
       methodType:'post',  // Optional, default is post
@@ -61,32 +61,40 @@ Two way to use it.
 
 
 2 ->
-<div id="tableContainer"></div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>mgsDataTable</title>
+</head>
+<body>
+    <div id="tableContainer"></div>
 
-<script type="module">
-    import mgsDataTable from 'mgsdatatable';
+    <script type="module">
+        import mgsDataTable from 'mgsdatatable';
 
-    // Call the function to render table
-	mgsDataTable({
-      target:"#tableContainer",
-      url:'http://localhost/mgs/users',
-      data: {},
-      methodType:'post',  // Optional, default is post
-      pageLimits : [10,20,30,50,100], // Optional
-      page : 1, // Optional, default is 1
-      limit:10, // Optional, default is 10
-      column : '', // Optional, default is ''
-      sort : 'asc', // Optional, default is asc
-      search: '', // Optional, default is ''
-      prevPage: null, // Optional, default is null
-      nextPage: null, // Optional, default is null
-      isLimit:true, // Optional, default true
-      isSearch:true, // Optional, default true
-      isResult:true, // Optional, default true
-      isPagination:true, // Optional, default true
-      isSorting:true // Optional, default true
-    });
-</script>
+        // Call the function to render table
+        mgsDataTable({
+        target:"#tableContainer",
+        url:'http://localhost/mgs/users',
+        data: {},
+        methodType:'post',  // Optional, default is post
+        pageLimits : [10,20,30,50,100], // Optional
+        page : 1, // Optional, default is 1
+        limit:10, // Optional, default is 10
+        column : '', // Optional, default is ''
+        sort : 'asc', // Optional, default is asc
+        search: '', // Optional, default is ''
+        prevPage: null, // Optional, default is null
+        nextPage: null, // Optional, default is null
+        isLimit:true, // Optional, default true
+        isSearch:true, // Optional, default true
+        isResult:true, // Optional, default true
+        isPagination:true, // Optional, default true
+        isSorting:true // Optional, default true
+        });
+    </script>
+</body>
+</html>
 ```
 
 ## api 'http://localhost/mgs/users' responsed like this format -

@@ -30,7 +30,7 @@ const mgsDataTable = async (data) => {
     }
     let _mgsTarget = _mgsCommonData?.target;
     let _mgsFullUrl = _mgsCommonData?.url ?? '/';
-    let { token, ...allData} = {..._mgsCommonData?.data};
+    let { token, bearer, ...allData} = {..._mgsCommonData?.data};
     let methodType = _mgsCommonData?.methodType;
     let page = _mgsCommonData?.page ?? 1;
     let limit = _mgsCommonData?.limit ?? 10;
@@ -58,7 +58,8 @@ const mgsDataTable = async (data) => {
     // Prepare headers and body
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
-    if (_mgsIsPost) headers.append("X-CSRF-Token", token);
+    if (_mgsIsPost && token) headers.append("X-CSRF-Token", token);
+    if (bearer) headers.append("Authorization", `Bearer ${bearer}`);
 
     const _mgsOptions = {
         method: _mgsCommonData?.methodType,
