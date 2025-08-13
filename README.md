@@ -37,12 +37,23 @@ Two way to use it.
   <table id="myTable"></table>
   <script>
     mgsDataTable({
-      target: '#myTable',
-      url: '/api/data',
-      methodType: 'post',
-      data: { token: 'your-token' },
-      page: 1,
-      limit: 10
+      target:"#tableContainer",
+      url:'http://localhost/mgs/users',
+      data: {},
+      methodType:'post',  // Optional, default is post
+      pageLimits : [10,20,30,50,100], // Optional
+      page : 1, // Optional, default is 1
+      limit:10, // Optional, default is 10
+      column : '', // Optional, default is ''
+      sort : 'asc', // Optional, default is asc
+      search: '', // Optional, default is ''
+      prevPage: null, // Optional, default is null
+      nextPage: null, // Optional, default is null
+      isLimit:true, // Optional, default true
+      isSearch:true, // Optional, default true
+      isResult:true, // Optional, default true
+      isPagination:true, // Optional, default true
+      isSorting:true // Optional, default true
     });
   </script>
 </body>
