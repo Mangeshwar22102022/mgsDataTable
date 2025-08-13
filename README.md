@@ -24,6 +24,32 @@ npm install mgsdatatable
 ## after installation then use it-
 
 ```
+Two way to use it. 
+
+1 ->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>mgsDataTable Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/mgsdatatable@1.0.4/dist/mgsdatatable.min.js"></script>
+</head>
+<body>
+  <table id="myTable"></table>
+  <script>
+    mgsDataTable({
+      target: '#myTable',
+      url: '/api/data',
+      methodType: 'post',
+      data: { token: 'your-token' },
+      page: 1,
+      limit: 10
+    });
+  </script>
+</body>
+</html>
+
+
+2 ->
 <div id="tableContainer"></div>
 
 <script type="module">
