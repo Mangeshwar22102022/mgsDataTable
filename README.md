@@ -22,7 +22,7 @@ A simple, lightweight JavaScript library to create tables with **pagination**, *
     <html>
     <head>
         <title>mgsDataTable</title>
-        <script src="https://cdn.jsdelivr.net/npm/mgsdatatable@1.0.10/dist/mgsdatatable.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mgsdatatable@1.1.0/dist/mgsdatatable.min.js"></script>
     </head>
     <body>
         <table id="myTable"></table>

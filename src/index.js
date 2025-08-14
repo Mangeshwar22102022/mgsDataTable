@@ -120,11 +120,12 @@ const mgsDataTable = async (_mgsData) => {
             const _mgsPerPageSearch = `
                 <div class="row _mgsPerPageSearch"> 
                     ${isLimit ? `<div class="_mgsPerPageStyle">
-                        <select class="_mgsPerPageLimit form-control" name="_mgsPerPageLimit" style="width:'100px';padding:'8px 10px';border:'1px solid #ccc';border-radius:'4px';">${pageLimitData}</select>
+                        <span>Show</span> 
+                        <select class="_mgsPerPageLimit form-control" name="_mgsPerPageLimit" style="width:100px;padding:8px 10px;border:1px solid #ccc;border-radius:4px;">${pageLimitData}</select>
                     </div>`:``}
                     ${isSearch ? `<div class="_mgsSearchStyle"> 
                         <span>Search</span> 
-                        <input type="text" class="form-control _mgsSearchAnyField" style="width:'195px';padding:'8px 10px';border:'1px solid #ccc';border-radius:'4px';" name="_mgsSearchAnyField" value="${search}" placeholder="Search any field...">
+                        <input type="text" class="form-control _mgsSearchAnyField" name="_mgsSearchAnyField" value="${search}" placeholder="Search any field..." style="width:195px;padding:8px 10px;border:1px solid #ccc;border-radius:4px;">
                     </div> `:``}
                 </div>
             `;
