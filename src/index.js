@@ -119,13 +119,12 @@ const mgsDataTable = async (_mgsData) => {
 
             const _mgsPerPageSearch = `
                 <div class="row _mgsPerPageSearch"> 
-                    ${isLimit ? `<div class="_mgsPerPageStyle"> 
-                        <span>Show</span>
-                        <select class="_mgsPerPageLimit form-control" name="_mgsPerPageLimit">${pageLimitData}</select>
+                    ${isLimit ? `<div class="_mgsPerPageStyle">
+                        <select class="_mgsPerPageLimit form-control" name="_mgsPerPageLimit" style="width:'100px';padding:'8px 10px';border:'1px solid #ccc';border-radius:'4px';">${pageLimitData}</select>
                     </div>`:``}
                     ${isSearch ? `<div class="_mgsSearchStyle"> 
                         <span>Search</span> 
-                        <input type="text" class="form-control _mgsSearchAnyField" name="_mgsSearchAnyField" value="${search}" placeholder="Search any field...">
+                        <input type="text" class="form-control _mgsSearchAnyField" style="width:'195px';padding:'8px 10px';border:'1px solid #ccc';border-radius:'4px';" name="_mgsSearchAnyField" value="${search}" placeholder="Search any field...">
                     </div> `:``}
                 </div>
             `;
@@ -138,27 +137,7 @@ const mgsDataTable = async (_mgsData) => {
                 target.style.gap = '10px';
                 target.style.paddingLeft = '14px';
                 target.style.paddingRight = '14px';
-                target.style.marginBottom = '10px';
-
-                // Optional: style select dropdown
-                const select = target.querySelector('._mgsPerPageLimit');
-                if (select) {
-                    select.style.width = '100px';
-                    select.style.padding = '8px 10px';
-                    select.style.border = '1px solid #ccc';
-                    select.style.borderRadius = '4px';
-                }
-
-                // Optional: style search input
-                const searchInput = target.querySelector('._mgsSearchAnyField');
-                if (searchInput) {
-                    select.style.width = '195px';
-                    searchInput.style.padding = '8px 10px';
-                    searchInput.style.border = '1px solid #ccc';
-                    searchInput.style.borderRadius = '4px';
-                }
-
-                
+                target.style.marginBottom = '10px';                
             }
         }
 
