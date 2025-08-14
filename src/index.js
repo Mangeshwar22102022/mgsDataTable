@@ -69,6 +69,24 @@ const mgsDataTable = async (_mgsData) => {
     };
 
     const _mgsContainer = document.querySelector(_mgsTarget);
+    const _mgsErrorMessage = document.querySelector('._mgsErrorMessage');
+    _mgsErrorMessage?.remove();
+
+    // Initial setup for first time
+    const _mgsSpinner = document.createElement('div');
+    _mgsSpinner.className = '_mgsSpinner';
+    _mgsSpinner.innerHTML = `<i class="fa fa-spinner fa-spin"></i> &nbsp; Loading...`;
+    _mgsSpinner.style.cssText = `
+        position: fixed;
+        z-index: 1031;
+        width: 70%;
+        height: 30%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+    `;
+    _mgsContainer.insertAdjacentElement('beforebegin', _mgsSpinner);
     try {
         const _mgsResponse = await fetch(_mgsFullUrl, _mgsOptions);
         const _mgsResp = await _mgsResponse.json();
@@ -80,7 +98,7 @@ const mgsDataTable = async (_mgsData) => {
         const _total = (_mgsResult?.total != undefined && _mgsResult?.total  != null && _mgsResult?.total  != '')?_mgsResult?.total :0;
         const _mgsTotalPage = Math.ceil(_total/limit);
         const _mgsPagination = (_mgsTotalPage+2);
-        nextPage = (_mgsTotalPage > 0 && nextPage == null && prevPage == null)? 2 : nextPage;
+        nextPage = (_mgsTotalPage > 1 && nextPage == null && prevPage == null)? 2 : nextPage;
         
         // Clean up previous results
         const nextPaginate = document.querySelector('._mgsPaginateResult');
@@ -88,23 +106,7 @@ const mgsDataTable = async (_mgsData) => {
             nextPaginate.remove();
         }
         const tbody = _mgsContainer.querySelector('tbody');
-        if (tbody && _mgsOutput?.length > 0) tbody.remove();
-
-        // Initial setup for first time
-        const _mgsSpinner = document.createElement('div');
-        _mgsSpinner.className = '_mgsSpinner';
-        _mgsSpinner.innerHTML = `<i class="fa fa-spinner fa-spin"></i> &nbsp; Loading...`;
-        _mgsSpinner.style.cssText = `
-            position: fixed;
-            z-index: 1031;
-            width: 70%;
-            height: 30%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-        `;
-        _mgsContainer.insertAdjacentElement('beforebegin', _mgsSpinner);
+        if (tbody && _mgsOutput?.length > 0) tbody.remove();        
 
         //create limit and search
         if (_mgsCountsCheck == 0 && (isSearch || isLimit)) {
@@ -412,7 +414,7 @@ const mgsDataTable = async (_mgsData) => {
         }, 500);
     } catch (error) {
         const _mgsErrorMessage = `
-            <div class="row" style="text-align: center; display: block; margin: 10px auto; font-weight: bold; margin-top:50px;"> 
+            <div class="row _mgsErrorMessage" style="text-align: center; display: block; margin: 10px auto; font-weight: bold; margin-top:50px;"> 
                 <p>Error Message : <span style='color: red; margin-left:10px;'>${error.message}</span></p>
             </div>
         `;
@@ -478,7 +480,9 @@ document.addEventListener('keyup', function (e) {
           el.innerHTML = `${text} <span style="font-size:14px !important">▲</span>`;
           el.setAttribute('data-sort', 'asc');
         });
-        mgsDataTable({page,column, sort, search});
+        let prevPage = null;
+        let nextPage = null;
+        mgsDataTable({page,column, sort, search, prevPage, nextPage});
     }
   }
 });
