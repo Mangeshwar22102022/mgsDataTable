@@ -1,3 +1,5 @@
+// create a datatable with sortig, searching, pagination and limiting 
+let _mgsCountsCheck = 0;
 let _mgsCommonData = {
     target : '',
     url : '',
@@ -17,9 +19,9 @@ let _mgsCommonData = {
     isPagination: true,
     isSorting: true,
 }
-let _mgsCountsCheck = 0;
-const mgsDataTable = async (data) => {
-    _mgsCommonData = {..._mgsCommonData, ...data};
+const mgsDataTable = async (_mgsData) => {
+    
+    _mgsCommonData = {..._mgsCommonData, ..._mgsData};
     if(!_mgsCommonData?.target){
         alert('Target is requied.');
         return;
@@ -30,7 +32,7 @@ const mgsDataTable = async (data) => {
     }
     let _mgsTarget = _mgsCommonData?.target;
     let _mgsFullUrl = _mgsCommonData?.url ?? '/';
-    let { token, bearer, ...allData} = {..._mgsCommonData?.data};
+    let { token, bearerToken, ...allData} = {..._mgsCommonData?.data};
     let methodType = _mgsCommonData?.methodType;
     let page = _mgsCommonData?.page ?? 1;
     let limit = _mgsCommonData?.limit ?? 10;
@@ -59,7 +61,7 @@ const mgsDataTable = async (data) => {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     if (_mgsIsPost && token) headers.append("X-CSRF-Token", token);
-    if (bearer) headers.append("Authorization", `Bearer ${bearer}`);
+    if (bearerToken) headers.append("Authorization", `Bearer ${bearerToken}`);
 
     const _mgsOptions = {
         method: _mgsCommonData?.methodType,
@@ -75,21 +77,6 @@ const mgsDataTable = async (data) => {
     }
     const tbody = _mgsContainer.querySelector('tbody');
     if (tbody) tbody.remove();
-
-    // Initial setup for first time
-    const spinner = document.createElement('div');
-    spinner.className = '_mgsSpinner';
-    spinner.innerHTML = `<i class="fa fa-spinner fa-spin"></i> &nbsp; Loading...`;
-    spinner.style.cssText = `
-        position: fixed;
-        z-index: 1031;
-        width: 70%;
-        height: 30%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 20px;
-    `;
     
     try {
         const _mgsResponse = await fetch(_mgsFullUrl, _mgsOptions);
@@ -104,8 +91,23 @@ const mgsDataTable = async (data) => {
         const _mgsPagination = (_mgsTotalPage+2);
         nextPage = (_mgsTotalPage > 0 && nextPage == null && prevPage == null)? 2 : nextPage;
 
-        //create limit and search
+        // Initial setup for first time
+        const spinner = document.createElement('div');
+        spinner.className = '_mgsSpinner';
+        spinner.innerHTML = `<i class="fa fa-spinner fa-spin"></i> &nbsp; Loading...`;
+        spinner.style.cssText = `
+            position: fixed;
+            z-index: 1031;
+            width: 70%;
+            height: 30%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        `;
         _mgsContainer.insertAdjacentElement('beforebegin', spinner);
+
+        //create limit and search
         if (_mgsCountsCheck == 0 && (isSearch || isLimit)) {
             let pageLimitData = '';
             if(isLimit){
@@ -176,17 +178,17 @@ const mgsDataTable = async (data) => {
         _mgsColumn.forEach((text, key) => {
             text = _mgsCapitalizeFirstLetter (text);
             const th = document.createElement('th');
-            if(_mgsOutput?.length > 0 && isSorting){
+            if(_mgsOutput?.length > 0 && isSorting && text != 'Action'){
                 th.classList.add('_mgsSort');
             }
-            if(isSorting){
+            if(isSorting && text != 'Action'){
                 th.setAttribute('data-column', key); // or actual key if mapping to backend
                 if (column && key == column && sort == 'desc') {
                     th.setAttribute('data-sort', 'desc');
-                    th.innerHTML = `${text} <i class="fa fa-arrow-down" style="font-size:10px !important"></i>`;
+                    th.innerHTML = `${text} <span style="font-size:14px !important">▼</span>`;
                 }else{
                     th.setAttribute('data-sort', 'asc');
-                    th.innerHTML = `${text} <i class="fa fa-arrow-up" style="font-size:10px !important"></i>`;
+                    th.innerHTML = `${text} <span style="font-size:14px !important">▲</span>`;
                 }
             }else{
                 th.innerHTML = text;
@@ -253,6 +255,27 @@ const mgsDataTable = async (data) => {
         // Append the table to the container
         _mgsContainer.innerHTML = ''; // clear previous content
         _mgsContainer.appendChild(_mgsCreateTable);
+
+        if (_mgsContainer) {
+            _mgsContainer.style.width = '100%';
+            _mgsContainer.style.overflowX = 'auto';
+        }
+
+        // Select the table inside wrapper
+        const mgsTableStyle = document.querySelector(_mgsTarget+' table');
+        console.log(mgsTableStyle);
+        if (mgsTableStyle) {
+            mgsTableStyle.style.borderCollapse = 'collapse';
+            mgsTableStyle.style.minWidth = '100%';
+        }
+
+        // Select all th and td inside the wrapper table
+        const cells = document.querySelectorAll(_mgsTarget+' th, '+_mgsTarget+' td');
+        cells.forEach(cell => {
+            cell.style.padding = '16px 8px';
+            cell.style.borderTop = '1px solid #ddd';
+            cell.style.whiteSpace = 'nowrap';
+        });
 
         setTimeout(() => {
             spinner.remove();
@@ -448,7 +471,7 @@ document.addEventListener('keyup', function (e) {
         let sort = '';
         document.querySelectorAll('._mgsSort').forEach((el) => {
           const text = _mgsCapitalizeFirstLetter (el.textContent.trim());
-          el.innerHTML = `${text} <i class="fa fa-arrow-up" style="font-size:10px !important"></i>`;
+          el.innerHTML = `${text} <span style="font-size:14px !important">▲</span>`;
           el.setAttribute('data-sort', 'asc');
         });
         mgsDataTable({page,column, sort, search});
