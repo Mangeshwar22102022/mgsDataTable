@@ -136,8 +136,6 @@ const mgsDataTable = async (_mgsData) => {
                 target.style.justifyContent = 'space-between';
                 target.style.alignItems = 'center';
                 target.style.gap = '10px';
-                // target.style.paddingLeft = '14px';
-                // target.style.paddingRight = '14px';
                 target.style.marginBottom = '10px';                
             }
         }
@@ -160,7 +158,7 @@ const mgsDataTable = async (_mgsData) => {
         const _mgsThead = document.createElement('thead');
         const _mgsHeadRow = document.createElement('tr');
         _mgsColumn.forEach((text, key) => {
-            text = _mgsCapitalizeFirstLetter (text);
+            text = mgsCapitalizeFirstLetter (text);
             const th = document.createElement('th');
             if(_mgsOutput?.length > 0 && isSorting && text != 'Action'){
                 th.classList.add('_mgsSort');
@@ -383,8 +381,6 @@ const mgsDataTable = async (_mgsData) => {
             target.style.justifyContent = 'space-between';
             target.style.alignItems = 'center';
             target.style.gap = '10px';
-            // target.style.paddingLeft = '14px';
-            // target.style.paddingRight = '14px';
         }
         if(_mgsOutput?.length > 0){
             _mgsCountsCheck++;
@@ -456,7 +452,7 @@ document.addEventListener('keyup', function (e) {
         let column = '';
         let sort = '';
         document.querySelectorAll('._mgsSort').forEach((el) => {
-          const text = _mgsCapitalizeFirstLetter (el.textContent.trim());
+          const text = mgsCapitalizeFirstLetter (el.textContent.trim());
           el.innerHTML = `${text} <span style="font-size:14px !important">▲</span>`;
           el.setAttribute('data-sort', 'asc');
         });
@@ -480,14 +476,14 @@ document.addEventListener('click', function (e) {
 });
 
 // string to convert first letter of a string to uppercase
-function _mgsCapitalizeFirstLetter(str) {
+function mgsCapitalizeFirstLetter(str) {
     const capitalized = str.replace(/_/g,' ').replace(/\b\w/g, function(match) {return match.toUpperCase();});
     return capitalized;
 }
 
 // Export globally for UMD/IIFE
 window.mgsDataTable = mgsDataTable;
-window._mgsCapitalizeFirstLetter  = _mgsCapitalizeFirstLetter ;
+window.mgsCapitalizeFirstLetter  = mgsCapitalizeFirstLetter ;
 
 // If using modules
-export { mgsDataTable, _mgsCapitalizeFirstLetter };
+export { mgsDataTable, mgsCapitalizeFirstLetter };
