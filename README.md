@@ -24,7 +24,7 @@ All functions are globally accessible via window.
     <html>
     <head>
         <title>mgsDataTable</title>
-        <script src="https://cdn.jsdelivr.net/npm/mgsdatatable@1.1.1/dist/mgsdatatable.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mgsdatatable@1.1.2/dist/mgsdatatable.min.js"></script>
     </head>
     <body>
         <table id="myTable"></table>
