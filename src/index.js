@@ -118,7 +118,7 @@ const mgsDataTable = async (_mgsData) => {
             }
 
             const _mgsPerPageSearch = `
-                <div class="row _mgsPerPageSearch"> 
+                <div class="_mgsPerPageSearch"> 
                     ${isLimit ? `<div class="_mgsPerPageStyle">
                         <span>Show</span> 
                         <select class="_mgsPerPageLimit form-control" name="_mgsPerPageLimit" style="width:100px;padding:8px 10px;border:1px solid #ccc;border-radius:4px;">${pageLimitData}</select>
@@ -136,8 +136,8 @@ const mgsDataTable = async (_mgsData) => {
                 target.style.justifyContent = 'space-between';
                 target.style.alignItems = 'center';
                 target.style.gap = '10px';
-                target.style.paddingLeft = '14px';
-                target.style.paddingRight = '14px';
+                // target.style.paddingLeft = '14px';
+                // target.style.paddingRight = '14px';
                 target.style.marginBottom = '10px';                
             }
         }
@@ -368,7 +368,7 @@ const mgsDataTable = async (_mgsData) => {
         }
         
         const paginationResult = `
-            <div class="row _mgsPaginateResult">
+            <div class="_mgsPaginateResult">
                 ${isResult ? `<div>Showing ${_from} to ${_to} of ${_total} results</div>`:``}
                 ${isPagination? `<div style="margin-top:10px;"> 
                     <ul class="mgsPagination" style="margin-left: auto !important"> 
@@ -383,8 +383,8 @@ const mgsDataTable = async (_mgsData) => {
             target.style.justifyContent = 'space-between';
             target.style.alignItems = 'center';
             target.style.gap = '10px';
-            target.style.paddingLeft = '14px';
-            target.style.paddingRight = '14px';
+            // target.style.paddingLeft = '14px';
+            // target.style.paddingRight = '14px';
         }
         if(_mgsOutput?.length > 0){
             _mgsCountsCheck++;
@@ -394,7 +394,7 @@ const mgsDataTable = async (_mgsData) => {
         }, 500);
     } catch (error) {
         const _mgsErrorMessage = `
-            <div class="row _mgsErrorMessage" style="text-align: center; display: block; margin: 10px auto; font-weight: bold; margin-top:50px;"> 
+            <div class="_mgsErrorMessage" style="text-align: center; display: block; margin: 10px auto; font-weight: bold; margin-top:50px;"> 
                 <p>Error Message : <span style='color: red; margin-left:10px;'>${error.message}</span></p>
             </div>
         `;
