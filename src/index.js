@@ -7,7 +7,7 @@ let _mgsCommonData = {
     data : {},
     pageLimits : [10,20,30,50,100],
     page : 1,
-    limit : 10,
+    limit : null,
     column : '',
     sort : 'asc',
     search: '',
@@ -18,15 +18,17 @@ let _mgsCommonData = {
     isResult: true,
     isPagination: true,
     isSorting: true,
+    isSrno: false,
+    isSrnoText:'Sr.No.'
 }
 const mgsDataTable = async (_mgsData) => {
     _mgsCommonData = {..._mgsCommonData, ..._mgsData};
     if(!_mgsCommonData?.target){
-        alert('Target is requied.');
+        mgsNotifyMessage('Target is requied in function mgsDataTable', 'error');
         return;
     }
     if(!_mgsCommonData?.url){
-        alert('URL is requied.');
+        mgsNotifyMessage('URL is required in function mgsDataTable', 'error')
         return;
     }
     let _mgsTarget = _mgsCommonData?.target;
@@ -34,8 +36,8 @@ const mgsDataTable = async (_mgsData) => {
     let { token, bearerToken, ...allData} = {..._mgsCommonData?.data};
     let methodType = _mgsCommonData?.methodType;
     let page = _mgsCommonData?.page ?? 1;
-    let limit = _mgsCommonData?.limit ?? 10;
     let pageLimits = _mgsCommonData?.pageLimits ?? [10,20,30,50,100];
+    let limit = (_mgsCommonData?.limit) ? _mgsCommonData?.limit : pageLimits[0] ?? 10;
     let search = _mgsCommonData?.search;
     let column = _mgsCommonData?.column;
     let sort = _mgsCommonData?.sort;
@@ -46,13 +48,15 @@ const mgsDataTable = async (_mgsData) => {
     let isResult = _mgsCommonData?.isResult ?? true;
     let isPagination = _mgsCommonData?.isPagination ?? true;
     let isSorting = _mgsCommonData?.isSorting ?? true;
+    let isSrno = _mgsCommonData?.isSrno ?? false;
+    let isSrnoText = _mgsCommonData?.isSrnoText ?? 'Sr.No.';
 
     allData = { ...allData, page, limit }
     if (search != null && search != undefined && search.trim() != '') {
         allData = { ...allData, search }
     }
     if (column != null && column != undefined && column.trim() != '') {
-        allData = { ...allData, column, sort }
+        allData = { ...allData, column : (isSrno)?column-1:column, sort }
     }
 
     const _mgsIsPost = methodType.toLowerCase() === 'post';
@@ -79,12 +83,13 @@ const mgsDataTable = async (_mgsData) => {
     _mgsSpinner.style.cssText = `
         position: fixed;
         z-index: 1031;
-        width: 70%;
+        width: 80%;
         height: 30%;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 20px;
+        font-size: 25px;
+        color: #0ec6d5;
     `;
     _mgsContainer.insertAdjacentElement('beforebegin', _mgsSpinner);
     try {
@@ -92,7 +97,7 @@ const mgsDataTable = async (_mgsData) => {
         const _mgsResp = await _mgsResponse.json();
         const _mgsResult = _mgsResp?.data ?? [];
         const _mgsOutput = _mgsResp?.data?.data ?? [];
-        const _mgsColumn = _mgsResp?.column ?? [];
+        let _mgsColumn = _mgsResp?.column ?? [];
         const _from = (_mgsResult?.from != undefined && _mgsResult?.from  != null && _mgsResult?.from  != '')?_mgsResult?.from :0;
         const _to = (_mgsResult?.to != undefined && _mgsResult?.to  != null && _mgsResult?.to  != '')?_mgsResult?.to :0;
         const _total = (_mgsResult?.total != undefined && _mgsResult?.total  != null && _mgsResult?.total  != '')?_mgsResult?.total :0;
@@ -157,24 +162,16 @@ const mgsDataTable = async (_mgsData) => {
         // Create thead
         const _mgsThead = document.createElement('thead');
         const _mgsHeadRow = document.createElement('tr');
+        if(isSrno){
+            _mgsColumn.unshift(isSrnoText);
+        }
         _mgsColumn.forEach((text, key) => {
             text = mgsCapitalizeFirstLetter (text);
             const th = document.createElement('th');
-            if(_mgsOutput?.length > 0 && isSorting && text != 'Action'){
+            if(_mgsOutput?.length > 0 && isSorting && !['Action',isSrnoText].includes(text)){
                 th.classList.add('_mgsSort');
             }
-            if(isSorting && text != 'Action'){
-                th.setAttribute('data-column', key); // or actual key if mapping to backend
-                if (column && key == column && sort == 'desc') {
-                    th.setAttribute('data-sort', 'desc');
-                    th.innerHTML = `${text} <span style="font-size:14px !important">▼</span>`;
-                }else{
-                    th.setAttribute('data-sort', 'asc');
-                    th.innerHTML = `${text} <span style="font-size:14px !important">▲</span>`;
-                }
-            }else{
-                th.innerHTML = text;
-            }
+            th.title = text;
             th.style.cssText = `
                 background-color: #f8f9fa;
                 font-weight: bold;
@@ -188,7 +185,44 @@ const mgsDataTable = async (_mgsData) => {
                 text-align:left;
                 padding: 2px;
                 border-top: 1px solid rgb(222, 226, 230);
+                position:relative;
             `;
+            if(isSorting && !['Action',isSrnoText].includes(text)){
+                th.setAttribute('data-column', key); // or actual key if mapping to backend
+                th.innerHTML = `${text} `;
+                // Add sort icon
+                const _mgsSortIcon = document.createElement("span");
+                _mgsSortIcon.style.position = "absolute";
+                _mgsSortIcon.style.display = "none";
+                _mgsSortIcon.style.fontSize = "12px";                
+                if (column && key == column && sort == 'desc') {
+                    th.setAttribute('data-sort', 'desc');
+                    _mgsSortIcon.innerHTML = "▼";
+                }else{
+                    th.setAttribute('data-sort', 'asc');
+                     _mgsSortIcon.innerHTML = "▲";
+                }
+                th.addEventListener("mouseenter", () => {
+                    _mgsSortIcon.style.display = "inline";
+                });
+                th.addEventListener("mouseleave", () => {
+                    if(column && key == column){
+                        _mgsSortIcon.style.display = "inline";
+                    }else{
+                        _mgsSortIcon.style.display = "none";
+                    }
+                });
+                if(column && key == column ){
+                    th.style.color = "#0ec6d5";
+                    _mgsSortIcon.style.display = "inline";
+                }else{
+                    th.style.color = "default";
+                }
+                th.appendChild(_mgsSortIcon);
+            }else{
+                th.innerHTML = text;
+                th.style.cursor = 'default'
+            }
             _mgsHeadRow.appendChild(th);
         });
         _mgsThead.appendChild(_mgsHeadRow);
@@ -199,7 +233,7 @@ const mgsDataTable = async (_mgsData) => {
         if(_mgsOutput?.length > 0){
             _mgsOutput.forEach((text, key) => {
                 let _createRow = document.createElement('tr');
-                _mgsColumn.forEach(col => {
+                _mgsColumn.forEach((col, ky) => {
                     let td = document.createElement('td');
                     td.style.cssText = `
                         width: 150px;
@@ -211,7 +245,7 @@ const mgsDataTable = async (_mgsData) => {
                         padding: 2px;
                         border-top: 1px solid rgb(222, 226, 230);
                     `;
-                    td.innerHTML = text[col];
+                    td.innerHTML = (isSrno && ky == 0)?(_from+key):text[col];
                     td.title = text[col];
                     _createRow.appendChild(td);
                 });
@@ -451,11 +485,6 @@ document.addEventListener('keyup', function (e) {
         let page = 1;
         let column = '';
         let sort = '';
-        document.querySelectorAll('._mgsSort').forEach((el) => {
-          const text = mgsCapitalizeFirstLetter (el.textContent.trim());
-          el.innerHTML = `${text} <span style="font-size:14px !important">▲</span>`;
-          el.setAttribute('data-sort', 'asc');
-        });
         let prevPage = null;
         let nextPage = null;
         mgsDataTable({page,column, sort, search, prevPage, nextPage});
@@ -481,9 +510,38 @@ function mgsCapitalizeFirstLetter(str) {
     return capitalized;
 }
 
+//show message 
+function mgsNotifyMessage(message, type = 'success', time=4000) {
+    let mgsMessageBox = document.getElementById('_mgsMessage');
+    if (!mgsMessageBox) {
+        mgsMessageBox = document.createElement('div');
+        mgsMessageBox.id = '_mgsMessage';
+        mgsMessageBox.style.position = 'fixed';
+        mgsMessageBox.style.top = '20px';
+        mgsMessageBox.style.right = '20px';
+        mgsMessageBox.style.zIndex = '99999';
+        mgsMessageBox.style.padding = '15px 20px';
+        mgsMessageBox.style.borderRadius = '5px';
+        mgsMessageBox.style.minWidth = '200px';
+        mgsMessageBox.style.mgsMessageBoxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+        mgsMessageBox.style.fontFamily = 'Arial, sans-serif';
+        document.body.appendChild(mgsMessageBox);
+    }
+
+    mgsMessageBox.style.display = 'block';
+    mgsMessageBox.innerText = message;
+    mgsMessageBox.style.background = type === 'success' ? '#03741dff' : '#b30b1bff';
+    mgsMessageBox.style.color = '#ffff';
+    mgsMessageBox.style.border = type === 'success' ? '1px solid #03741dff' : '1px solid #b30b1bff';
+    setTimeout(() => {
+        mgsMessageBox.style.display = 'none';
+    }, time);
+}
+
 // Export globally for UMD/IIFE
 window.mgsDataTable = mgsDataTable;
-window.mgsCapitalizeFirstLetter  = mgsCapitalizeFirstLetter ;
+window.mgsCapitalizeFirstLetter  = mgsCapitalizeFirstLetter;
+window.mgsNotifyMessage = mgsNotifyMessage;
 
 // If using modules
-export { mgsDataTable, mgsCapitalizeFirstLetter };
+export { mgsDataTable, mgsCapitalizeFirstLetter, mgsNotifyMessage };
