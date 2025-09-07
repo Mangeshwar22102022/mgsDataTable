@@ -164,7 +164,7 @@ All functions are globally accessible via window.
             isSrno: true,
             isSrnoText: "User ID"
         Column header will show User ID instead of Sr.No.
-        
+
 ```
 
 ## 📄 Usage via CDN
@@ -174,7 +174,7 @@ All functions are globally accessible via window.
     <html>
     <head>
         <title>mgsDataTable</title>
-        <script src="https://cdn.jsdelivr.net/npm/mgsdatatable@1.1.3/dist/mgsdatatable.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mgsdatatable@1.1.4/dist/mgsdatatable.min.js"></script>
     </head>
     <body>
         <div id="myTable"> </div>
