@@ -16,6 +16,8 @@ All functions are globally accessible via window.
 - 🎨 **Custom Serial Number** — (e.g. Sr.No.).  
 - 📦 **No Dependencies** — Works in all modern browsers.
 
+![Add More Validation Example](http://raw.githubusercontent.com/Mangeshwar22102022/mgsdatatable/mangesh/public/images/datatable.png)
+
 ---
 
 ## Function Uses
@@ -34,7 +36,13 @@ All functions are globally accessible via window.
             isPagination: true,   // Optional, default: true
             isSorting: true,      // Optional, default: true
             isSrno: true,         // Optional, default: false
-            isSrnoText: "ID"      // Optional, default: "Sr.No"
+            isSrnoText: "ID"      // Optional, default: "Sr.No",
+            isAllData: false      // Optional, default: false,
+                                  // true  → Load ALL records once and handle
+                                  //         searching, sorting, pagination
+                                  //         entirely on the frontend (no API calls)
+                                  // false → Fetch data from server on each
+                                  //         search/sort/pagination action
         });
     </script>
 
@@ -50,10 +58,24 @@ All functions are globally accessible via window.
         API endpoint to fetch data.
         Example: "http://localhost/mgs/users"
         The API should return a JSON response.
-        Response - 
+        
+        Payload - 
         {
-            "status": true,
-            "data": {
+            "page": 1,
+            "limit": 10,
+            "column": "2",  //Optional column index
+            "sort": "desc", //Optional
+            "search": ""    //Optional
+        }
+
+
+        Response - 
+
+        i)- If case isAllData:false then --- (Fetch data from server on each search/sort/pagination action)-
+
+            {
+                "status": true,
+                "message": "Data Found",
                 "column": [
                     "name",
                     "role",
@@ -63,34 +85,74 @@ All functions are globally accessible via window.
                     "status",
                     "action"
                 ],
-                "data": [
-                    {
-                        "id": 1,
-                        "name": "Mangesh",
-                        "role": "superadmin",
-                        "email": "mangesh@gmail.com",
-                        "mobile": "1234567890",
-                        "image": "<img src='http://localhost/mgs/storage/user/1692380264.avif' style='height: 50px; width: 100px; border-radius: 50px;'>",
-                        "status": "<span data-id='1' class='status badge badge-sm badge-success' data-status='Inactive'>Active</span>",
-                        "action": "<span data-id='1' class='btn-danger badge badge-sm badge-danger delete' title='Delete'><i class='fa fa-trash'></i></span> <a href='http://localhost/mgs/user-update/1' class='btn-success badge badge-sm badge-success' title='Update'><i class='fa fa-edit'></i></a>"
-                    },
-                    {
-                        "id": 2,
-                        "name": "Ashwani",
-                        "role": "superadmin",
-                        "email": "ashwani@gmail.com",
-                        "mobile": "1234567891",
-                        "image": "<img src='http://localhost/mgs/storage/user/1692380264.avif' style='height: 50px; width: 100px; border-radius: 50px;'>",
-                        "status": "<span data-id='2' class='status badge badge-sm badge-success' data-status='Inactive'>Active</span>",
-                        "action": "<span data-id='2' class='btn-danger badge badge-sm badge-danger delete' title='Delete'><i class='fa fa-trash'></i></span> <a href='http://localhost/mgs/user-update/2' class='btn-success badge badge-sm badge-success' title='Update'><i class='fa fa-edit'></i></a>"
-                    }
+                "data": {
+                    "data": [
+                        {
+                            "id": 1,
+                            "name": "Mangesh",
+                            "role": "superadmin",
+                            "email": "mangesh@gmail.com",
+                            "mobile": "1234567890",
+                            "image": "<img src='http://localhost/mgs/storage/user/1692380264.avif' style='height: 50px; width: 100px; border-radius: 50px;'>",
+                            "status": "<span data-id='1' class='status badge badge-sm badge-success' data-status='Inactive'>Active</span>",
+                            "action": "<span data-id='1' class='btn-danger badge badge-sm badge-danger delete' title='Delete'><i class='fa fa-trash'></i></span> <a href='http://localhost/mgs/user-update/1' class='btn-success badge badge-sm badge-success' title='Update'><i class='fa fa-edit'></i></a>"
+                        },
+                        {
+                            "id": 2,
+                            "name": "Ashwani",
+                            "role": "superadmin",
+                            "email": "ashwani@gmail.com",
+                            "mobile": "1234567891",
+                            "image": "<img src='http://localhost/mgs/storage/user/1692380264.avif' style='height: 50px; width: 100px; border-radius: 50px;'>",
+                            "status": "<span data-id='2' class='status badge badge-sm badge-success' data-status='Inactive'>Active</span>",
+                            "action": "<span data-id='2' class='btn-danger badge badge-sm badge-danger delete' title='Delete'><i class='fa fa-trash'></i></span> <a href='http://localhost/mgs/user-update/2' class='btn-success badge badge-sm badge-success' title='Update'><i class='fa fa-edit'></i></a>"
+                        }
+                    ],
+                    "from": 1,
+                    "to": 10,
+                    "total": 30
+                }
+            }
+    
+        ii)- If case isAllData:true then --- (Load ALL records once and handle searching, sorting, pagination entirely on the frontend (no API calls))-
+
+            {
+                "status": true,
+                "message": "Data Found",
+                "column": [
+                    "name",
+                    "role",
+                    "email",
+                    "mobile",
+                    "image",
+                    "status",
+                    "action"
                 ],
-                "from": 1,
-                "to": 10,
-                "total": 30
-            },
-            "message": "Data found"
-        }
+                "data": {
+                    "data": [
+                        {
+                            "id": 1,
+                            "name": "Mangesh",
+                            "role": "superadmin",
+                            "email": "mangesh@gmail.com",
+                            "mobile": "1234567890",
+                            "image": "<img src='http://localhost/mgs/storage/user/1692380264.avif' style='height: 50px; width: 100px; border-radius: 50px;'>",
+                            "status": "<span data-id='1' class='status badge badge-sm badge-success' data-status='Inactive'>Active</span>",
+                            "action": "<span data-id='1' class='btn-danger badge badge-sm badge-danger delete' title='Delete'><i class='fa fa-trash'></i></span> <a href='http://localhost/mgs/user-update/1' class='btn-success badge badge-sm badge-success' title='Update'><i class='fa fa-edit'></i></a>"
+                        },
+                        {
+                            "id": 2,
+                            "name": "Ashwani",
+                            "role": "superadmin",
+                            "email": "ashwani@gmail.com",
+                            "mobile": "1234567891",
+                            "image": "<img src='http://localhost/mgs/storage/user/1692380264.avif' style='height: 50px; width: 100px; border-radius: 50px;'>",
+                            "status": "<span data-id='2' class='status badge badge-sm badge-success' data-status='Inactive'>Active</span>",
+                            "action": "<span data-id='2' class='btn-danger badge badge-sm badge-danger delete' title='Delete'><i class='fa fa-trash'></i></span> <a href='http://localhost/mgs/user-update/2' class='btn-success badge badge-sm badge-success' title='Update'><i class='fa fa-edit'></i></a>"
+                        }
+                    ]
+                }
+            }
 
     3 - data (object) – Optional
 
@@ -164,6 +226,13 @@ All functions are globally accessible via window.
             isSrno: true,
             isSrnoText: "User ID"
         Column header will show User ID instead of Sr.No.
+    
+    12 - isAllData (boolean) – Optional
+
+        Default: false
+        When enabled, all records are loaded once at initial load.
+        Searching, sorting, pagination, and page limits are handled
+        entirely on the frontend without any server-side requests.
 
 ```
 
@@ -190,7 +259,13 @@ All functions are globally accessible via window.
                 isPagination: true,   // Optional, default: true
                 isSorting: true,      // Optional, default: true
                 isSrno: true,         // Optional, default: false
-                isSrnoText: "ID"      // Optional, default: "Sr.No"
+                isSrnoText: "ID",     // Optional, default: "Sr.No"
+                isAllData: false      // Optional, default: false,
+                                      // true  → Load ALL records once and handle
+                                      //         searching, sorting, pagination
+                                      //         entirely on the frontend (no API calls)
+                                      // false → Fetch data from server on each
+                                      //         search/sort/pagination action
             });
         </script>
     </body>
@@ -230,7 +305,13 @@ npm install mgsdatatable
                 isPagination: true,   // Optional, default: true
                 isSorting: true,      // Optional, default: true
                 isSrno: true,         // Optional, default: false
-                isSrnoText: "ID"      // Optional, default: "Sr.No"
+                isSrnoText: "ID",     // Optional, default: "Sr.No"
+                isAllData: false      // Optional, default: false,
+                                      // true  → Load ALL records once and handle
+                                      //         searching, sorting, pagination
+                                      //         entirely on the frontend (no API calls)
+                                      // false → Fetch data from server on each
+                                      //         search/sort/pagination action
             });
         </script>
     </body>
@@ -245,7 +326,7 @@ npm install mgsdatatable
         {
             "page": 1,
             "limit": 10,
-            "column": "2",  //Optional
+            "column": "2",  //Optional column index
             "sort": "desc", //Optional
             "search": ""    //Optional
         }
