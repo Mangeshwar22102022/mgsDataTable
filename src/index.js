@@ -1,5 +1,11 @@
 // create a datatable with sortig, searching, pagination and limiting 
 let _mgsCountsCheck = 0;
+let _mgsIsAllData = [];
+let _mgsColumn = [];
+let _mgsResponse = [];
+let _mgsResp = [];
+let _mgsResult = [];
+let _mgsOutput = [];
 let _mgsCommonData = {
     target : '',
     url : '',
@@ -19,7 +25,8 @@ let _mgsCommonData = {
     isPagination: true,
     isSorting: true,
     isSrno: false,
-    isSrnoText:'Sr.No.'
+    isSrnoText:'Sr.No.',
+    isAllData:false,
 }
 const mgsDataTable = async (_mgsData) => {
     _mgsCommonData = {..._mgsCommonData, ..._mgsData};
@@ -50,6 +57,7 @@ const mgsDataTable = async (_mgsData) => {
     let isSorting = _mgsCommonData?.isSorting ?? true;
     let isSrno = _mgsCommonData?.isSrno ?? false;
     let isSrnoText = _mgsCommonData?.isSrnoText ?? 'Sr.No.';
+    let isAllData = _mgsCommonData?.isAllData ?? false;
 
     allData = { ...allData, page, limit }
     if (search != null && search != undefined && search.trim() != '') {
@@ -93,14 +101,24 @@ const mgsDataTable = async (_mgsData) => {
     `;
     _mgsContainer.insertAdjacentElement('beforebegin', _mgsSpinner);
     try {
-        const _mgsResponse = await fetch(_mgsFullUrl, _mgsOptions);
-        const _mgsResp = await _mgsResponse.json();
-        const _mgsResult = _mgsResp?.data ?? [];
-        const _mgsOutput = _mgsResp?.data?.data ?? [];
-        let _mgsColumn = _mgsResp?.column ?? [];
-        const _from = (_mgsResult?.from != undefined && _mgsResult?.from  != null && _mgsResult?.from  != '')?_mgsResult?.from :0;
-        const _to = (_mgsResult?.to != undefined && _mgsResult?.to  != null && _mgsResult?.to  != '')?_mgsResult?.to :0;
-        const _total = (_mgsResult?.total != undefined && _mgsResult?.total  != null && _mgsResult?.total  != '')?_mgsResult?.total :0;
+        if((isAllData && _mgsCountsCheck == 0) || !isAllData){
+            _mgsResponse = await fetch(_mgsFullUrl, _mgsOptions);
+            _mgsResp = await _mgsResponse.json();
+            _mgsResult = _mgsResp?.data ?? [];
+            _mgsOutput = ((isAllData)?_mgsResp?.data:_mgsResp?.data?.data) ?? [];
+            _mgsColumn = _mgsResp?.column ?? [];
+            _mgsIsAllData = JSON.parse(JSON.stringify(_mgsOutput));
+        }
+        let _from = (_mgsResult?.from != undefined && _mgsResult?.from  != null && _mgsResult?.from  != '')?_mgsResult?.from :0;
+        let _to = (_mgsResult?.to != undefined && _mgsResult?.to  != null && _mgsResult?.to  != '')?_mgsResult?.to :0;
+        let _total = (_mgsResult?.total != undefined && _mgsResult?.total  != null && _mgsResult?.total  != '')?_mgsResult?.total :0;
+        if(isAllData){
+            _total = _mgsIsAllData?.length;
+            _from = (((page - 1) * limit) + 1);
+            _to = Math.min(page * limit, _total);
+            _mgsIsAllData = _mgsSortData(_mgsIsAllData,_mgsColumn[column], sort)
+            _mgsOutput = _mgsIsAllData?.slice(_from-1, _to);
+        }
         const _mgsTotalPage = Math.ceil(_total/limit);
         const _mgsPagination = (_mgsTotalPage+2);
         nextPage = (_mgsTotalPage > 1 && nextPage == null && prevPage == null)? 2 : nextPage;
@@ -163,7 +181,9 @@ const mgsDataTable = async (_mgsData) => {
         const _mgsThead = document.createElement('thead');
         const _mgsHeadRow = document.createElement('tr');
         if(isSrno){
-            _mgsColumn.unshift(isSrnoText);
+            if(!_mgsColumn.includes(isSrnoText)){
+                _mgsColumn.unshift(isSrnoText);
+            }
         }
         _mgsColumn.forEach((text, key) => {
             text = mgsCapitalizeFirstLetter (text);
@@ -435,6 +455,18 @@ const mgsDataTable = async (_mgsData) => {
     }
 };
 
+function _mgsSortData(data, key, order = 'asc') {
+  return [...data].sort((a, b) => {
+    let valA = a[key] ?? '';
+    let valB = b[key] ?? '';
+    if (typeof valA === 'string') valA = valA.toLowerCase();
+    if (typeof valB === 'string') valB = valB.toLowerCase();
+    if (valA < valB) return order === 'asc' ? -1 : 1;
+    if (valA > valB) return order === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
 //for per page
 document.addEventListener('click', function (e) {
   const target = e.target.closest('._mgsPageItem');
@@ -498,10 +530,12 @@ document.addEventListener('click', function (e) {
     if (!target) return;
     e.preventDefault();
     const page = 1;
+    const prevPage = null;
+    const nextPage = null;
     const column = target.getAttribute('data-column');
     const columnSortType = target.getAttribute('data-sort');
     let sort = columnSortType === 'asc'?'desc':'asc';
-    mgsDataTable({page, column, sort});
+    mgsDataTable({page, column, sort, prevPage, nextPage});
 });
 
 // string to convert first letter of a string to uppercase
