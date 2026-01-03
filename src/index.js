@@ -113,11 +113,19 @@ const mgsDataTable = async (_mgsData) => {
         let _to = (_mgsResult?.to != undefined && _mgsResult?.to  != null && _mgsResult?.to  != '')?_mgsResult?.to :0;
         let _total = (_mgsResult?.total != undefined && _mgsResult?.total  != null && _mgsResult?.total  != '')?_mgsResult?.total :0;
         if(isAllData){
-            _total = _mgsIsAllData?.length;
+            let searchData = [];
+            if(search){
+                searchData = _mgsSearchingData(_mgsIsAllData, search)
+            }else{
+                searchData = _mgsIsAllData;
+            }
+            _total = searchData?.length;
             _from = (((page - 1) * limit) + 1);
             _to = Math.min(page * limit, _total);
-            _mgsIsAllData = _mgsSortData(_mgsIsAllData,_mgsColumn[column], sort)
-            _mgsOutput = _mgsIsAllData?.slice(_from-1, _to);
+            if(column){
+                _mgsIsAllData = _mgsSortData(_mgsIsAllData, _mgsColumn[column], sort)
+            }
+            _mgsOutput = searchData?.slice(_from-1, _to);
         }
         const _mgsTotalPage = Math.ceil(_total/limit);
         const _mgsPagination = (_mgsTotalPage+2);
@@ -455,7 +463,8 @@ const mgsDataTable = async (_mgsData) => {
     }
 };
 
-function _mgsSortData(data, key, order = 'asc') {
+//sorting data from all data
+const _mgsSortData = (data, key, order = 'asc') => {
   return [...data].sort((a, b) => {
     let valA = a[key] ?? '';
     let valB = b[key] ?? '';
@@ -465,6 +474,20 @@ function _mgsSortData(data, key, order = 'asc') {
     if (valA > valB) return order === 'asc' ? 1 : -1;
     return 0;
   });
+}
+
+//searching data from all data
+const _mgsSearchingData = (data, searchText) => {
+    if (!searchText) return data;
+    searchText = searchText.toLowerCase();
+    return data.filter(row => {
+        return Object.keys(row).some(key => {
+            if (['image', 'status', 'action'].includes(key)) return false;
+            const value = row[key];
+            if (value === null || value === undefined) return false;
+            return value.toString().toLowerCase().includes(searchText);
+        });
+    });
 }
 
 //for per page
